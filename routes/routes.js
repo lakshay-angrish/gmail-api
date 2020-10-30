@@ -24,6 +24,7 @@ router.get('/auth', (req, res, next) => {
         .then(response => {
             console.log(response.data);
             return new Promise((resolve, reject) => {
+                //write access tokens to a file
                 fs.writeFile('user_tokens.json', JSON.stringify(response.data), (err) => {
                     if (err)    reject(err);
                     resolve(response.data);
@@ -49,6 +50,7 @@ router.get('/auth', (req, res, next) => {
     }
 });
 
+//route to send an email
 router.post('/send', (req, res, next) => {
     let USER_TOKENS;
     fs.readFile('user_tokens.json', (err, data) => {
@@ -63,6 +65,7 @@ router.post('/send', (req, res, next) => {
     
             const data = 'To: ' + req.body.to + '\nSubject: ' + req.body.subject + '\n\n' + req.body.messageBody;
             console.log(data);
+            //convert the entire message to base64
             const email64 = Buffer.from(data).toString('base64');
     
             axios
